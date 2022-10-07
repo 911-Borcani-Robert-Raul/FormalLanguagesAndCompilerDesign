@@ -1,6 +1,6 @@
 fun sum_n_numbers: numbers
     sum = 0
-    for number in numbers:      // ERROR: should be foreach number in numbers repeat
+    foreach number in numbers repeat
         sum ++ number
 
 fun max_min_numbers: numbers
@@ -12,7 +12,7 @@ fun max_min_numbers: numbers
         if number < minimum then
             minimum = number
     
-    return ;minimum;maximum;    // ERROR: this is not how you should return, you sohuld set result variable
+    result = ;minimum;maximum;
 
 write: sum_n_numbers:;3;4;5;::
 write: max_min_numbers:;3;4;1;::

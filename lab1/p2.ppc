@@ -5,7 +5,7 @@ fun is_prime: x
     while d * d <= x AND result is true repeat
         if x mod d is 0 then
             result = false
-        inc d
+        inc: d:
 
 fun gcd: a b
     rem = a mod b

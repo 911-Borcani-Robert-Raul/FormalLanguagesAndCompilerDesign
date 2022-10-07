@@ -1,0 +1,32 @@
+fun is_prime: x
+    d = 2
+    result = true
+    
+    while d * d <= x AND result is true repeat
+        if x mod d is 0 then
+            result = false
+        inc d
+
+fun gcd: a b
+    rem = a mod b
+
+    while rem not 0 repeat
+        rem = a mod b
+        a = b
+        b = rem
+    
+    result = a
+
+fun solution_second_order_equation: a b c
+    delta = b^2 - 4.a.c
+
+    if delta < 0 then
+        result = ;;
+    ei delta == 0 then
+        result = ;(-b div 2*a);
+    el
+        result = ;(-b - square_root: delta:) div 2*a;(-b + square_root: delta:) div 2*a;
+
+write: is_prime:3::
+write: gcd:3 4::
+write: solution_second_order_equation:3 -4 2::

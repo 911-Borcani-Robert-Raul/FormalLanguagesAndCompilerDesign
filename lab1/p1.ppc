@@ -1,0 +1,15 @@
+fun maximum: a b
+    if a > b then
+        result = a
+    el
+        result = b
+
+fun minimum : a b
+    if a < b then
+        result = a
+    el
+        result = b
+
+
+write: maximum:3 4::
+write: minimum:3 4::

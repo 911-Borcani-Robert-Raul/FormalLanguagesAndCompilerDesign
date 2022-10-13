@@ -1,0 +1,43 @@
+Sintactical rules:
+
+program ::= "var" decllist ";" cmpdstmt "end"
+
+decllist ::= declaration | declaration ";" decllist
+
+declaration ::= IDENTIFIER ":" type | "struct " IDENTIFIER "(" decllist ")"
+
+type1 ::= "char" | "integer"
+
+arraydecl ::= "ARRAY" "[" nr "]" "OF" type1
+
+type  ::= type1 | arraydecl
+
+cmpdstmt ::= "$" stmtlist "$"
+
+stmtlist ::= stmt | stmt ";" stmtlist
+
+stmt ::= simplstmt | structstmt
+
+simplstmt ::= assignstmt | iostmt | structaccessstmt
+
+assignstmt ::= IDENTIFIER "=" expression
+
+expression ::= expression "+" term | term
+
+term ::= term "*" factor | factor
+
+factor ::= "(" expression ")" | IDENTIFIER
+
+iostmt ::= "read" "(" IDENTIFIER ")" | "write" "(" IDENTIFIER ")"
+
+structaccessstmt ::= IDENTIFIER "." IDENTIFIER
+
+structstmt ::= cmpdstmt | ifstmt | whilestmt
+
+ifstmt ::= "if" condition "then" stmt ["el" stmt]
+
+whilestmt ::= "while" condition "repeat" stmt
+
+condition ::= expression RELATION expression
+
+RELATION ::= "<" | "<=" | "==" | "<>" | ">=" | ">"

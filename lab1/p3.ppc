@@ -1,18 +1,23 @@
-fun sum_n_numbers: numbers
-    sum = 0
-    foreach number in numbers repeat
-        sum ++ number
+var
+    n: integer;
+    a: array[5] of integer;
+    sum: integer;
+    i: integer;
+;
 
-fun max_min_numbers: numbers
-    minimum = numbers.first::
-    maximum = numbers.first::
-    foreach number in numbers repeat
-        if number > maximum then
-            maximum = number
-        if number < minimum then
-            minimum = number
-    
-    result = ;minimum;maximum;
+n = 5;
+a[0] = 1;
+a[1] = 2;
+a[2] = 3;
+a[3] = 4;
+a[4] = 10;
 
-write: sum_n_numbers:;3;4;5;::
-write: max_min_numbers:;3;4;1;::
+i = 0;
+while i < n repeat
+    sum = sum + a[i];
+    i = i + 1;
+;
+
+write(sum);
+
+end

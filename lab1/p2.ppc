@@ -1,32 +1,76 @@
-fun is_prime: x
-    d = 2
-    result = true
-    
-    while d * d <= x AND result is true repeat
-        if x mod d is 0 then
-            result = false
-        inc: d:
+var
+    a: integer
+    d: integer
+    prime: integer
+    result: integer
+    x: integer
+    y: integer
+    gcd: integer
+    done: integer
+    b: integer
+    c: integer
+    delta: integer
+    result: integer
+;
 
-fun gcd: a b
-    rem = a mod b
+a = 5;
+d = 2;
+prime = 1;
 
-    while rem not 0 repeat
-        rem = a mod b
-        a = b
-        b = rem
-    
-    result = a
+while d * d <= a repeat
+    if a % d == 0 then
+        prime = 0
+    ;
+;
 
-fun solution_second_order_equation: a b c
-    delta = b^2 - 4.a.c
+if prime == 1 then
+    write("Number is prime\n");
+el
+    write("Number not prime\n");
+;
 
-    if delta < 0 then
-        result = ;;
-    ei delta == 0 then
-        result = ;(-b div 2*a);
-    el
-        result = ;(-b - square_root: delta:) div 2*a;(-b + square_root: delta:) div 2*a;
 
-write: is_prime:3::
-write: gcd:3 4::
-write: solution_second_order_equation:3 -4 2::
+x = 12;
+y = 18;
+if x > y then
+    gcd = x;
+el
+    gcd = y;
+;
+
+done = 0;
+while done == 0 repeat
+    if x % gcd == 0 then
+        if y % gcd == 0 then
+            done = 1;
+        ;
+    ;
+
+    if done == 0 then
+        gcd = gcd - 1;
+    ;
+;
+
+write(gcd)
+write("\n")
+
+a = -5;
+b = 3;
+c = 2;
+
+delta = b * b - 4 * a * c;
+
+if delta > 0 then
+    result = (-b - sqrt(delta)) / 2 * a;
+    write(result);
+    write(",");
+    result = (-b + sqrt(delta)) / 2 * a;
+    write(result);
+el if delta == 0 then
+    result = (-b) / 2 * a;
+    write(result);
+el
+    write("no solution");
+;;
+
+end

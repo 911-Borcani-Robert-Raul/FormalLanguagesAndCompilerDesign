@@ -1,0 +1,36 @@
+Symbol Table documentation:
+
+    This is a data structure that contains the symbol table, which is a table that links a key of type string (identifier) to a position in the symbol table
+
+    __init__(number_of_buckets=1000):
+        Creates a new SymbolTable that uses a Hashtable as a data structure
+        Parameters:
+            :number_of_buckets: Can be set to manually set the number of buckets of the hash Table
+    
+    insert(value: str):
+        Inserts a new entry in the symtable.
+        Parameters:
+            :entry: an object of type SymbolTableEntry, the entry to be inserted
+        Return value:
+            The position of the inserted element
+    
+    find(key: str):
+        Finds a key of an entry in the Symbol Table.
+        Parameters:
+            :key: The key for which we search in the symbol table
+        Return value:
+            The position of the found key. If the key is not found, returns -2
+
+
+Scanner (function scan):
+    Scans the fiven code using the given tokens
+    Parameters:
+        :code: a list of strings representing the code to be scanned, one string per line
+        :tokens: a list of tokens for the language
+        :identifiers: a SymbolTable where identifiers will be placed
+        :constants: a SymbolTable where constants will be placed
+        :pif: a list denoting the PIF
+    Return value:
+        String "lexically correct" if the program was succesfully scanned and not errors were found
+        String "lexical error: " followed by found errors if errors were found
+

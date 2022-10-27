@@ -6,9 +6,9 @@ decllist ::= declaration | declaration ";" decllist
 
 declaration ::= IDENTIFIER ":" type | "struct " IDENTIFIER "(" decllist ")"
 
-type1 ::= "char" | "integer"
+type1 ::= "char" | "integer" | arraydecl
 
-arraydecl ::= "ARRAY" "[" nr "]" "OF" type1
+arraydecl ::= "array" "[" nr "]" "of" type1
 
 type  ::= type1 | arraydecl
 
@@ -22,15 +22,17 @@ simplstmt ::= assignstmt | iostmt | structaccessstmt
 
 assignstmt ::= IDENTIFIER "=" expression
 
-expression ::= expression "+" term | term
+expression ::= expression "+" term | term | expression "-" term
 
-term ::= term "*" factor | factor
+term ::= term "*" factor | factor | term "%" factor | term "/" factor
 
-factor ::= "(" expression ")" | IDENTIFIER
+factor ::= "(" expression ")" | IDENTIFIER | noconst | "sqrt(" expression ")"
 
-iostmt ::= "read" "(" IDENTIFIER ")" | "write" "(" IDENTIFIER ")"
+iostmt ::= "read" "(" IDENTIFIER ")" | "write" "(" IDENTIFIER ")" | "write" "(" string ")"
 
 structaccessstmt ::= IDENTIFIER "." IDENTIFIER
+
+IDENTIFIER ::= string | string "[" integer "]"
 
 structstmt ::= cmpdstmt | ifstmt | whilestmt
 

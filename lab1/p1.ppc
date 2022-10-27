@@ -1,15 +1,27 @@
-fun maximum: a b
-    if a > b then
-        result = a
+var
+    a: integer;
+    b: integer;
+    c: integer;
+    result: integer;
+;
+
+a = 5;
+b = 7;
+c = 9;
+
+if a > b then
+    if a > c then
+        result = a;
     el
-        result = b
+        result = c;
+    ;
+;
 
-fun minimum : a b
-    if a < b then
-        result = a
-    el
-        result = b
+if b > a then
+    if b > c then
+        result = b;
+    ;
+;
 
-
-write: maximum:3 4::
-write: minimum:3 4::
+write(result);
+end

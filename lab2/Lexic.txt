@@ -36,13 +36,15 @@ then var while write
 
       noconst ::= "+" no | "-" no | no
 
-      no ::= nzero {digit}
+      no ::= nzero {digit} | digit
 
       nzero ::= "1" | "2" | ... | "9"
  
 2. character
 
     character ::= 'letter' | 'digit'
+
+    string ::= "{character}"
 
 3. struct
 

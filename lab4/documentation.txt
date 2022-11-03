@@ -20,6 +20,16 @@ Symbol Table documentation:
             :key: The key for which we search in the symbol table
         Return value:
             The position of the found key. If the key is not found, returns -2
+    
+    find_by_bucket_and_position(self, bucket_index, position_index):
+        """
+        Finds the key found at bucket_index and position_index
+        Parameters:
+            :bucket_index: the index of the bucket
+            :position_index: the index of the position in the bucket
+        Return value:
+            The found key. Throws IndexOutOfBounds if the indexes are not in the ranges of the bucket
+        """
 
 
 Scanner (function scan):

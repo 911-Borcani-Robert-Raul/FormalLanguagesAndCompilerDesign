@@ -50,6 +50,17 @@ class SymbolTable:
                 return values.position
         
         return -2
+    
+    def find_by_bucket_and_position(self, bucket_index, position_index):
+        """
+        Finds the key found at bucket_index and position_index
+        Parameters:
+            :bucket_index: the index of the bucket
+            :position_index: the index of the position in the bucket
+        Return value:
+            The found key. Throws IndexOutOfBounds if the indexes are not in the ranges of the bucket
+        """
+        return self._buckets[bucket_index][position_index].key
 
     def _string_hash(string: str, p=7):
         """

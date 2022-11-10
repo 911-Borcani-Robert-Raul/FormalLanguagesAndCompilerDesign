@@ -1,5 +1,12 @@
+import os, sys
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
+
 import re
 import typing
+
+from lab5.fa import FiniteAutomaton
 
 class SymbolTableEntry:
     def __init__(self, key: str, position: int):
@@ -89,16 +96,8 @@ with open(tokens_file, 'r') as tokens_file:
 
 
 def is_number(token):
-    if token[0] in '+-':
-        token = token[1:]
-    if token == '0':
-        return True
-    if token[0] == '0':
-        return False
-    for char in token:
-        if char not in '0123456789':
-            return False
-    return True
+    fa = FiniteAutomaton.init_from_file('integer_fa.txt')
+    return fa.check_word(token)
 
 
 def is_string(token):
@@ -112,14 +111,8 @@ def is_constant(token):
 
 
 def is_identifier(token):
-    characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ_'
-    digits = '0123456789'
-    if token[0] not in characters:
-        return False
-    for char in token:
-        if char not in characters and char not in digits:
-            return False
-    return True
+    fa = FiniteAutomaton.init_from_file('identifier_fa.txt')
+    return fa.check_word(token)
 
 
 def scan(code, tokens, identifiers, constants, pif):
@@ -201,7 +194,7 @@ code_file_p2 = '/Users/robert-raulborcani/Documents/Facultate/Anul_III/SEM_1/FLC
 code_file_p3 = '/Users/robert-raulborcani/Documents/Facultate/Anul_III/SEM_1/FLCD/FormalLanguagesAndCompilerDesign/lab1/p3.ppc'
 
 
-with open(code_file_p1, 'r') as code_file:
+with open(code_file_p3, 'r') as code_file:
     code = code_file.readlines()
     identifiers = SymbolTable()
     constants = SymbolTable()

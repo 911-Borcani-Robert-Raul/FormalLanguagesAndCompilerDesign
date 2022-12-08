@@ -38,13 +38,14 @@ class Grammar:
         self.__starting_symbol = starting_symbol
         self.__productions_for: dict = productions
         self.__states: list[State] = []
-        self.__parsing_table = None
+        self.__starting_state: State = None
+        self.__parsing_table: ParsingTable = None
         if enhance:
             self._enhance_grammar()
         self.__set_productions()
 
     def __set_productions(self):
-        self.__productions = []
+        self.__productions: list[Production] = []
         for lhs, right_hand_sides in self.__productions_for.items():
             for rhs in right_hand_sides:
                 self.__productions.append(Production(lhs, rhs))
@@ -137,7 +138,8 @@ class Grammar:
 
     def col_can(self):
         state_set: set[State] = set()
-        state_set.add(State(self.closure([self.__starting_item])))
+        self.__starting_state = State(self.closure([self.__starting_item]))
+        state_set.add(self.__starting_state)
         done = False
 
         while not done:
@@ -161,6 +163,16 @@ class Grammar:
             if production == production_to_find:
                 return production
 
+    def get_state_by_id(self, state_id):
+        for state in self.__states:
+            if state.get_id() == state_id:
+                return state
+
+    def get_production_by_id(self, production_id):
+        for production in self.__productions:
+            if production.production_id == production_id:
+                return production
+
     def construct_parsing_table(self):
         if len(self.__states) == 0:
             self.col_can()
@@ -177,6 +189,17 @@ class Grammar:
                 else:
                     items_dot_not_end.append(item)
 
+            if len(items_dot_not_end) > 0:
+                parsing_table.add_action(state, Action(ActionType.SHIFT))
+                for symbol in self._get_terminals_and_nonterminals():
+                    new_state = State(self.go_to(state, symbol))
+                    if len(new_state.get_items()) == 0:
+                        continue
+                    for obtained_state in self.__states:
+                        if new_state == obtained_state:
+                            new_state.set_id(obtained_state.get_id())
+
+                    parsing_table.set_goto(state.get_id(), symbol, new_state.get_id())
             if len(items_dot_end) > 0:
                 if len(items_dot_end) > 1:
                     print('######################REDUCE REDUCE CONFLICT...')
@@ -186,7 +209,7 @@ class Grammar:
                         print(self.get_production_for_item(item))
                     # return
                 if len(items_dot_not_end) > 0:
-                    print('######################REDUCE SHIFT CONFLICT...')
+                    print('INFO: REDUCE SHIFT CONFLICT...')
                     number_of_conflicts += 1
                     print('REDUCE: ' + str(state) + ' R' + str(self.get_production_for_item(items_dot_end[0])))
                     print('SHIFT: ')
@@ -199,21 +222,62 @@ class Grammar:
                     parsing_table.add_action(state, Action(ActionType.ACCEPT))
                 else:
                     parsing_table.add_action(state, Action(ActionType.REDUCE, production.production_id))
-            else:
-                parsing_table.add_action(state, Action(ActionType.SHIFT))
-                for symbol in self._get_terminals_and_nonterminals():
-                    new_state = State(self.go_to(state, symbol))
-                    if len(new_state.get_items()) == 0:
-                        continue
-                    for obtained_state in self.__states:
-                        if new_state == obtained_state:
-                            new_state.set_id(obtained_state.get_id())
-
-                    parsing_table.set_goto(state.get_id(), symbol, new_state.get_id())
 
         if number_of_conflicts > 0:
             print('Found ' + str(number_of_conflicts) + ' conflicts')
-            exit(0)
 
         self.__parsing_table = parsing_table
         return parsing_table
+
+    def parse(self, word: list[str]):
+        if self.__parsing_table is None:
+            self.construct_parsing_table()
+
+        work_stack = [('$', self.__starting_state)]
+        input_stack = list(reversed(word))
+        output = []
+
+        done = False
+        while not done:
+            current_state: State = work_stack[-1][1]
+
+            found_action = False
+            for action in self.__parsing_table.get_action(current_state.get_id()):
+                if action.action_type == ActionType.SHIFT:
+                    next_token = input_stack[-1]
+                    next_state_id = self.__parsing_table.get_goto(current_state.get_id(), next_token)
+                    if next_state_id is None:
+                        continue
+
+                    next_state = self.get_state_by_id(next_state_id)
+                    work_stack.append((next_token, next_state))
+                    input_stack.pop()
+                    found_action = True
+                    break
+                elif action.action_type == ActionType.REDUCE:
+                    red_production_id = action.reduce_index
+                    production_to_reduce: Production = self.get_production_by_id(red_production_id)
+                    production_length = len(production_to_reduce.rhs)
+
+                    work_stack = work_stack[:len(work_stack) - production_length]
+                    new_state = self.get_state_by_id(self.__parsing_table.get_goto(work_stack[-1][1].get_id(),
+                                                                                   production_to_reduce.lhs))
+                    work_stack.append((production_to_reduce.lhs, new_state))
+                    output.append(production_to_reduce)
+                    found_action = True
+                    break
+                else:
+                    if len(input_stack) > 0:
+                        continue
+                    found_action = True
+                    done = True
+
+            if not found_action:
+                print('ERROR')
+                exit(0)
+
+        output.reverse()
+
+        print('Output: ')
+        for production in output:
+            print(str(production))

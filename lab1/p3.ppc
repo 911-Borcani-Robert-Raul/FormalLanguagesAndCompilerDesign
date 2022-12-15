@@ -3,8 +3,8 @@ var
     a: array[5] of integer;
     sum: integer;
     i: integer;
-;
 
+#
 n = 5;
 a[0] = 1;
 a[1] = 2;
@@ -20,4 +20,5 @@ while i < n repeat
 
 write(sum);
 
+%
 end

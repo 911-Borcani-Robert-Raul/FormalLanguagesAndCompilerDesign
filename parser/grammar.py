@@ -4,6 +4,7 @@ from copy import deepcopy
 from parsing_table import ParsingTable, Action, ActionType
 from state import State
 from item import Item
+from tree import Node, print_tree
 
 
 class GrammarUtils(Enum):
@@ -238,12 +239,15 @@ class Grammar:
         output = []
 
         done = False
+        nodes_stack = []
         while not done:
             current_state: State = work_stack[-1][1]
 
             found_action = False
             for action in self.__parsing_table.get_action(current_state.get_id()):
                 if action.action_type == ActionType.SHIFT:
+                    if len(input_stack) == 0:
+                        continue
                     next_token = input_stack[-1]
                     next_state_id = self.__parsing_table.get_goto(current_state.get_id(), next_token)
                     if next_state_id is None:
@@ -260,10 +264,27 @@ class Grammar:
                     production_length = len(production_to_reduce.rhs)
 
                     work_stack = work_stack[:len(work_stack) - production_length]
-                    new_state = self.get_state_by_id(self.__parsing_table.get_goto(work_stack[-1][1].get_id(),
-                                                                                   production_to_reduce.lhs))
+                    next_state = self.__parsing_table.get_goto(work_stack[-1][1].get_id(), production_to_reduce.lhs)
+                    new_state = self.get_state_by_id(next_state)
                     work_stack.append((production_to_reduce.lhs, new_state))
                     output.append(production_to_reduce)
+
+                    node: Node = Node(production_to_reduce.lhs)
+                    for symbol in reversed(production_to_reduce.rhs):
+                        if symbol in self.__nonterminals:
+                            current_node: Node = nodes_stack.pop()
+                            current_node.father = node
+                            node.siblings = [current_node] + node.siblings
+                        else:
+                            leaf: Node = Node(symbol, node)
+                            node.siblings = [leaf] + node.siblings
+                    nodes_stack.append(node)
+                    # print(str(production_to_reduce))
+                    print_tree(node)
+                    # print("###")
+                    # for item in reversed(output):
+                    #     print(str(item))
+
                     found_action = True
                     break
                 else:
@@ -273,7 +294,8 @@ class Grammar:
                     done = True
 
             if not found_action:
-                print('ERROR')
+                print('ERROR AT STATE ' + str(work_stack) + ' with next token ' + str(input_stack[-1]))
+                print(str(word))
                 exit(0)
 
         output.reverse()
@@ -281,3 +303,6 @@ class Grammar:
         print('Output: ')
         for production in output:
             print(str(production))
+
+        print_tree(nodes_stack[0])
+        return nodes_stack[0]

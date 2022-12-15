@@ -135,7 +135,7 @@ def scan(code, tokens, identifiers, constants, pif):
     for line_index in range(len(code)):
         line = code[line_index]
         line_with_tokens_separated = ''
-        separators = ";:()[]+-"
+        separators = "#%!;:()[]+-"
 
         char_index = 0
         while char_index < len(line):
@@ -194,7 +194,7 @@ code_file_p2 = '/Users/robert-raulborcani/Documents/Facultate/Anul_III/SEM_1/FLC
 code_file_p3 = '/Users/robert-raulborcani/Documents/Facultate/Anul_III/SEM_1/FLCD/FormalLanguagesAndCompilerDesign/lab1/p3.ppc'
 
 
-with open(code_file_p3, 'r') as code_file:
+with open(code_file_p2, 'r') as code_file:
     code = code_file.readlines()
     identifiers = SymbolTable()
     constants = SymbolTable()
@@ -203,7 +203,7 @@ with open(code_file_p3, 'r') as code_file:
     message = scan(code, tokens, identifiers, constants, pif)
     print(message)
 
-    with open("PIF.OUT", 'w') as f:
+    with open("../parser/PIF.OUT", 'w') as f:
         pif_string = ''
         for entry in pif:
             pif_string += str(entry) + '\n'

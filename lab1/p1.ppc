@@ -3,8 +3,8 @@ var
     b: integer;
     c: integer;
     result: integer;
-;
 
+#
 a = 5;
 b = 7;
 c = 9;
@@ -24,4 +24,5 @@ if b > a then
 ;
 
 write(result);
+%
 end

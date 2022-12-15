@@ -1,25 +1,24 @@
 var
-    a: integer
-    d: integer
-    prime: integer
-    result: integer
-    x: integer
-    y: integer
-    gcd: integer
-    done: integer
-    b: integer
-    c: integer
-    delta: integer
-    result: integer
-;
+    a: integer;
+    d: integer;
+    prime: integer;
+    result: integer;
+    x: integer;
+    y: integer;
+    gcd: integer;
+    done: integer;
+    b: integer;
+    c: integer;
+    delta: integer;
 
+#
 a = 5;
 d = 2;
 prime = 1;
 
 while d * d <= a repeat
     if a % d == 0 then
-        prime = 0
+        prime = 0;
     ;
 ;
 
@@ -51,26 +50,26 @@ while done == 0 repeat
     ;
 ;
 
-write(gcd)
-write("\n")
+write(gcd);
+write("\n");
 
-a = -5;
+a = -2;
 b = 3;
 c = 2;
 
 delta = b * b - 4 * a * c;
-
-if delta > 0 then
-    result = (-b - sqrt(delta)) / 2 * a;
-    write(result);
-    write(",");
-    result = (-b + sqrt(delta)) / 2 * a;
-    write(result);
-el if delta == 0 then
-    result = (-b) / 2 * a;
-    write(result);
-el
+if delta < 0 then
     write("no solution");
-;;
-
+;
+if delta > 0 then
+    result = (-b - sqrt(delta)) / (2 * a);
+    write(result);
+    result = (-b + sqrt(delta)) / (2 * a);
+    write(result);
+;
+if delta == 0 then
+    result = -b / (2 * a);
+    write(result);
+;
+%
 end

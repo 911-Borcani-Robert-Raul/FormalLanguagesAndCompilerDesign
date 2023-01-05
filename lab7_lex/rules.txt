@@ -1,0 +1,23 @@
+program : VAR decllist cmpdstmt END
+decllist : multiple_declarations
+multiple_declarations : declaration ; | declaration ; decllist
+declaration : IDENTIFIER : type | STRUCT  IDENTIFIER ( decllist )
+type1 : CHAR | INTEGER | arraydecl
+arraydecl : ARRAY [ __ID_CONSTANT ] OF type1
+type  : type1
+cmpdstmt : # stmtlist %
+stmtlist : stmt ; | stmt ; stmtlist
+stmt : simplstmt | structstmt
+simplstmt : assignstmt | iostmt | structaccessstmt
+assignstmt : IDENTIFIER = expression
+expression : expression + term | expression - term | term | - term
+term : term % factor | term * factor | term / factor | factor | SQRT ( expression )
+factor : ( expression ) | IDENTIFIER
+iostmt : READ ( IDENTIFIER ) | WRITE ( IDENTIFIER ) | WRITE ( string )
+structaccessstmt : IDENTIFIER . IDENTIFIER ;
+IDENTIFIER : __ID_CONSTANT | __ID_IDENTIFIER | __ID_IDENTIFIER [ __id_constant ] | __ID_IDENTIFIER [ __id_identifier ]
+structstmt : cmpdstmt | ifstmt | whilestmt
+ifstmt : IF condition THEN stmtlist | IF condition THEN stmtlist EL stmtlist
+whilestmt : WHILE condition REPEAT stmtlist
+condition : expression RELATION expression
+RELATION : < | <= | == | <> | >= | >

@@ -23,7 +23,7 @@ def read_pif2(file_name):
 
 
 if __name__ == '__main__':
-    grammar = Grammar.get_grammar_from_file("grammar_andrei.txt", True)
+    grammar = Grammar.get_grammar_from_file("grammars/grammar_robert.txt", True)
     # print(grammar.get_terminals)
     # print(grammar.get_nonterminals)
     # print(grammar.get_productions)
@@ -42,6 +42,6 @@ if __name__ == '__main__':
     # print([str(prod) for prod in grammar.get_productions])
     # print(str(grammar.construct_parsing_table()))
 
-    # print(str(read_pif('PIF.OUT')))
-    # grammar.parse(read_pif('PIF.out'))
-    grammar.parse(read_pif2('PIF2.out'))
+    # print(str(read_pif('PIF_robert.OUT')))
+    grammar.parse(read_pif('PIF_robert.out'))
+    # grammar.parse(read_pif2('PIF_andrei.out'))

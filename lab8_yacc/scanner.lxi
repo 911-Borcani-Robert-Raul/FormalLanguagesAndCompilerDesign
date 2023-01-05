@@ -1,0 +1,80 @@
+%{
+#include <stdio.h>
+#include <string.h>
+#include "y.tab.h"
+int lines = 0;
+%}
+
+%option noyywrap
+%option caseless
+
+DIGIT [0-9]
+NON_ZERO_DIGIT [1-9]
+INT_CONSTANT [-]?{NON_ZERO_DIGIT}{DIGIT}*|0
+LETTER [a-zA-Z_]
+STRING_CONSTANT \"({LETTER}|{DIGIT})*\"
+IDENTIFIER {LETTER}({LETTER}|{DIGIT})*
+BAD_IDENTIFIER ({DIGIT})+({LETTER})+({LETTER}|{DIGIT})*
+
+%%
+
+"sqrt" { printf("%s - reserved word\n", yytext); return SQRT; }
+"char" { printf("%s - reserved word\n", yytext); return CHAR; }
+"integer" { printf("%s - reserved word\n", yytext); return INTEGER; }
+"if" { printf("%s - reserved word\n", yytext); return IF; }
+"then" { printf("%s - reserved word\n", yytext); return THEN; }
+"el" { printf("%s - reserved word\n", yytext); return EL; }
+"while" { printf("%s - reserved word\n", yytext); return WHILE; }
+"repeat" { printf("%s - reserved word\n", yytext); return REPEAT; }
+"var" { printf("%s - reserved word\n", yytext); return VAR; }
+"end" { printf("%s - reserved word\n", yytext); return END; }
+"mod" { printf("%s - reserved word\n", yytext); return MOD; }
+"space" { printf("%s - reserved word\n", yytext); return SPACE; }
+"read" { printf("%s - reserved word\n", yytext); return READ; }
+"write" { printf("%s - reserved word\n", yytext); return WRITE; }
+"struct" { printf("%s - reserved word\n", yytext); return STRUCT; }
+"array" { printf("%s - reserved word\n", yytext); return ARRAY; }
+"of" { printf("%s - reserved word\n", yytext); return OF; }
+
+{IDENTIFIER} {printf("%s - identifier\n", yytext); return IDENTIFIER; }
+
+{BAD_IDENTIFIER} {printf("Error at token %s at line %d\n", yytext, lines); return -1;}
+
+{INT_CONSTANT} {printf("%s - int constant\n", yytext); return INTCONSTANT; }
+
+{STRING_CONSTANT} {printf("%s - str constant\n", yytext); return STRINGCONSTANT; }
+
+"+" { printf("%s - operator\n", yytext); return PLUS; }
+"-" { printf("%s - operator\n", yytext); return MINUS; }
+"*" { printf("%s - operator\n", yytext); return TIMES; }
+"/" { printf("%s - operator\n", yytext); return DIV; }
+"%" { printf("%s - operator\n", yytext); return MOD; }
+"=" { printf("%s - operator\n", yytext); return EQ; }
+">" { printf("%s - operator\n", yytext); return BIGGER; }
+">=" { printf("%s - operator\n", yytext); return BIGGEREQ; }
+"<" { printf("%s - operator\n", yytext); return LESS; }
+"<=" { printf("%s - operator\n", yytext); return LESSEQ; }
+"==" { printf("%s - operator\n", yytext); return EQQ; }
+"!=" { printf("%s - operator\n", yytext); return NEQ; }
+"&&" { printf("%s - operator\n", yytext); return AND; }
+"||" { printf("%s - operator\n", yytext); return OR; }
+
+";" { printf("%s - separator\n", yytext); return SEMICOLON; }
+":" { printf("%s - separator\n", yytext); return COLON; }
+"(" { printf("%s - separator\n", yytext); return OPEN; }
+")" { printf("%s - separator\n", yytext); return CLOSE; }
+"[" { printf("%s - separator\n", yytext); return OPENA; }
+"]" { printf("%s - separator\n", yytext); return CLOSEA; }
+"{" { printf("%s - separator\n", yytext); return BRACKETOPEN; }
+"}" { printf("%s - separator\n", yytext); return BRACKETCLOSE; }
+"," { printf("%s - separator\n", yytext); return COMMA; }
+"#" { printf("%s - separator\n", yytext); return HASHTAG; }
+"." { printf("%s - separator\n", yytext); return DOT; }
+
+[ \t]+ {}
+
+[\n]+ {++lines;}
+
+. {printf("Error at token %s at line %d\n", yytext, lines); return -1;}
+
+%%

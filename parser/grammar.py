@@ -203,7 +203,7 @@ class Grammar:
                     parsing_table.set_goto(state.get_id(), symbol, new_state.get_id())
             if len(items_dot_end) > 0:
                 if len(items_dot_end) > 1:
-                    print('######################REDUCE REDUCE CONFLICT...')
+                    print('INFO: REDUCE REDUCE CONFLICT...')
                     number_of_conflicts += 1
                     print(str(state))
                     for item in items_dot_end:
@@ -279,11 +279,7 @@ class Grammar:
                             leaf: Node = Node(symbol, node)
                             node.siblings = [leaf] + node.siblings
                     nodes_stack.append(node)
-                    # print(str(production_to_reduce))
                     print_tree(node)
-                    # print("###")
-                    # for item in reversed(output):
-                    #     print(str(item))
 
                     found_action = True
                     break
@@ -296,7 +292,7 @@ class Grammar:
             if not found_action:
                 print('ERROR AT STATE ' + str(work_stack) + ' with next token ' + str(input_stack[-1]))
                 print(str(word))
-                exit(0)
+                return None
 
         output.reverse()
 

@@ -1,0 +1,23 @@
+program ::= "var" decllist cmpdstmt "end"
+decllist ::= multiple_declarations
+multiple_declarations ::= declaration ";" | declaration ";" decllist
+declaration ::= IDENTIFIER ":" type | "struct " IDENTIFIER "(" decllist ")"
+type1 ::= "char" | "integer" | arraydecl
+arraydecl ::= "array" "[" "__id_constant" "]" "of" type1
+type  ::= type1
+cmpdstmt ::= "#" stmtlist "%"
+stmtlist ::= stmt ";" | stmt ";" stmtlist
+stmt ::= simplstmt | structstmt
+simplstmt ::= assignstmt | iostmt | structaccessstmt
+assignstmt ::= IDENTIFIER "=" expression
+expression ::= expression "+" term | expression "-" term | term | "-" term
+term ::= term "%" factor | term "*" factor | term "/" factor | factor | "sqrt" "(" expression ")"
+factor ::= "(" expression ")" | IDENTIFIER
+iostmt ::= "read" "(" IDENTIFIER ")" | "write" "(" IDENTIFIER ")" | "write" "(" string ")"
+structaccessstmt ::= IDENTIFIER "." IDENTIFIER ";"
+IDENTIFIER ::= "__id_constant" | "__id_identifier" | "__id_identifier" "[" __id_constant "]" | "__id_identifier" "[" __id_identifier "]"
+structstmt ::= cmpdstmt | ifstmt | whilestmt
+ifstmt ::= "if" condition "then" stmtlist | "if" condition "then" stmtlist "el" stmtlist
+whilestmt ::= "while" condition "repeat" stmtlist
+condition ::= expression RELATION expression
+RELATION ::= "<" | "<=" | "==" | "<>" | ">=" | ">"

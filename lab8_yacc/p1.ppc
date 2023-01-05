@@ -1,0 +1,28 @@
+var
+    a: integer;
+    b: integer;
+    c: integer;
+    result: integer;
+
+#
+a = 5;
+b = 7;
+c = 9;
+
+if a > b then
+    if a > c then
+        result = a;
+    el
+        result = c;
+    ;
+;
+
+if b > a then
+    if b > c then
+        result = b;
+    ;
+;
+
+write(result);
+%
+end

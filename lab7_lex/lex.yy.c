@@ -536,108 +536,86 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scanner.lxi"
 #line 2 "scanner.lxi"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-int lines = 0;
-char **string_symbol_table;
-int len_string = 10;
-int pointer_string = 0;
-char **identifier_symbol_table;
-int len_identifier = 10;
-int pointer_identifier = 0;
-int *int_symbol_table;
-int len_int = 10;
-int pointer_int = 0;
-struct Entry{
-    int code; //0 - token, 1 - identifier, 2 - int, 3 - string
+#define DIM 1024*1024
+
+int read_lines = 0;
+char **string_symtable;
+int len_string_symtable = DIM;
+int string_symtable_pointer = 0;
+char **identifier_symtable;
+int len_identifier_symtable = DIM;
+int identifier_sybtable_pointer = 0;
+int *int_symtable;
+int len_int_symtable = DIM;
+int int_symtable_pointer = 0;
+struct SymtableEntry{
+    int code;       // 0 - token, 1 - identifier, 2 - int, 3 - string
     char *token;
     int position;
 };
-struct Entry* pif;
-int len_pif = 10;
+struct SymtableEntry* pif;
+int len_pif = DIM;
 int pointer_pif = 0;
 
 void init_symbol_tables()
 {
-    string_symbol_table = malloc(len_string * sizeof(char*));
-    identifier_symbol_table = malloc(len_identifier * sizeof(char*));
-    int_symbol_table = malloc(len_int * sizeof(int));
-    pif = malloc(len_pif * sizeof(struct Entry));
+    string_symtable = malloc(len_string_symtable * sizeof(char*));
+    identifier_symtable = malloc(len_identifier_symtable * sizeof(char*));
+    int_symtable = malloc(len_int_symtable * sizeof(int));
+    pif = malloc(len_pif * sizeof(struct SymtableEntry));
 }
 
 void add_string (char *string)
 {
-    if (len_string == pointer_string) {
-        char **new_string_symbol_table = malloc(len_string * 2 * sizeof (char*));
-        for (int i = 0; i < len_string; ++i)
-            new_string_symbol_table[i] = string_symbol_table[i];
-        free(string_symbol_table);
-        len_string *= 2;
-        string_symbol_table = new_string_symbol_table;
-    }
-    string_symbol_table[pointer_string++] = string;
+    string_symtable[string_symtable_pointer++] = string;
 }
 
 void add_identifier (char *identifier)
 {
-    if (len_identifier == pointer_identifier) {
-        char **new_identifier_symbol_table = malloc(len_identifier * 2 * sizeof (char*));
-        for (int i = 0; i < len_identifier; ++i)
-            new_identifier_symbol_table[i] = identifier_symbol_table[i];
-        free(identifier_symbol_table);
-        len_identifier *= 2;
-        identifier_symbol_table = new_identifier_symbol_table;
-    }
-    identifier_symbol_table[pointer_identifier++] = identifier;
+    identifier_symtable[identifier_sybtable_pointer++] = identifier;
 }
 
 void add_int (int number)
 {
-    if (len_int == pointer_int) {
-        int *new_int_symbol_table = malloc(len_int * 2 * sizeof (int));
-        for (int i = 0; i < len_int; ++i)
-            new_int_symbol_table[i] = int_symbol_table[i];
-        free(int_symbol_table);
-        len_int *= 2;
-        int_symbol_table = new_int_symbol_table;
-    }
-    int_symbol_table[pointer_int++] = number;
+    int_symtable[int_symtable_pointer++] = number;
 }
 
-int get_string_index(char *string)
+int add_string_and_get_string_index(char *string)
 {
-    for (int i = 0; i < pointer_string; ++i)
-        if (strcmp(string, string_symbol_table[i]) == 0)
+    for (int i = 0; i < string_symtable_pointer; ++i)
+        if (strcmp(string, string_symtable[i]) == 0)
             return i;
     add_string(string);
-    return pointer_string-1;
+    return string_symtable_pointer-1;
 }
 
-int get_identifier_index(char *identifier)
+int add_identifier_and_get_identifier_index(char *identifier)
 {
-    for (int i = 0; i < pointer_identifier; ++i)
-        if (strcmp(identifier, identifier_symbol_table[i]) == 0)
+    for (int i = 0; i < identifier_sybtable_pointer; ++i)
+        if (strcmp(identifier, identifier_symtable[i]) == 0)
             return i;
     add_identifier(identifier);
-    return pointer_identifier-1;
+    return identifier_sybtable_pointer-1;
 }
 
-int get_int_index(char *number)
+int add_int_and_get_int_index(char *number)
 {
     int x = atoi(number); // NOLINT(cert-err34-c)
-    for (int i = 0; i < pointer_int; ++i)
-        if (x == int_symbol_table[i])
+    for (int i = 0; i < int_symtable_pointer; ++i)
+        if (x == int_symtable[i])
             return i;
     add_int(x);
-    return pointer_int-1;
+    return int_symtable_pointer-1;
 }
 
-void add_to_pif(struct Entry entry)
+void add_to_pif(struct SymtableEntry entry)
 {
     if (len_pif == pointer_pif) {
-        struct Entry *new_pif = malloc(len_pif * 2 * sizeof (struct Entry));
+        struct SymtableEntry *new_pif = malloc(len_pif * 2 * sizeof (struct SymtableEntry));
         for (int i = 0; i < len_pif; ++i)
             new_pif[i] = pif[i];
         free(pif);
@@ -647,8 +625,8 @@ void add_to_pif(struct Entry entry)
     pif[pointer_pif++] = entry;
 }
 
-struct Entry get_entry(int opcode, char *token, int pos) {
-    struct Entry entry;
+struct SymtableEntry get_entry(int opcode, char *token, int pos) {
+    struct SymtableEntry entry;
     entry.code = opcode;
     entry.position = pos;
     entry.token = token;
@@ -662,9 +640,8 @@ char* string_copy(char *string) {
         new_string[i] = string[i];
     return new_string;
 }
-
-#line 666 "lex.yy.c"
-#line 667 "lex.yy.c"
+#line 643 "lex.yy.c"
+#line 644 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -881,10 +858,10 @@ YY_DECL
 		}
 
 	{
-#line 142 "scanner.lxi"
+#line 119 "scanner.lxi"
 
 
-#line 887 "lex.yy.c"
+#line 864 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -943,61 +920,61 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 144 "scanner.lxi"
+#line 121 "scanner.lxi"
 { char *token = string_copy(yytext); add_to_pif(get_entry(0, token, -1)); printf("%s - reserved word\n", yytext);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 146 "scanner.lxi"
-{char *id = string_copy(yytext); add_to_pif(get_entry(1, "__id_identifier", get_identifier_index(id))); printf("%s - identifier\n", yytext);}
+#line 123 "scanner.lxi"
+{char *id = string_copy(yytext); add_to_pif(get_entry(1, "__id_identifier", add_identifier_and_get_identifier_index(id))); printf("%s - identifier\n", yytext);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 148 "scanner.lxi"
-{printf("Error at token %s at line %d\n", yytext, lines); exit(1);}
+#line 125 "scanner.lxi"
+{printf("Error at token %s at line %d\n", yytext, read_lines); exit(1);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 150 "scanner.lxi"
-{char *int_const = string_copy(yytext); add_to_pif(get_entry(2, "__id_constant", get_int_index(int_const))); printf("%s - int constant\n", yytext);}
+#line 127 "scanner.lxi"
+{char *int_const = string_copy(yytext); add_to_pif(get_entry(2, "__id_constant", add_int_and_get_int_index(int_const))); printf("%s - int constant\n", yytext);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 152 "scanner.lxi"
-{char *str_const = string_copy(yytext); add_to_pif(get_entry(3, "__id_constant", get_string_index(str_const))); printf("%s - str constant\n", yytext);}
+#line 129 "scanner.lxi"
+{char *str_const = string_copy(yytext); add_to_pif(get_entry(3, "__id_constant", add_string_and_get_string_index(str_const))); printf("%s - str constant\n", yytext);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 154 "scanner.lxi"
+#line 131 "scanner.lxi"
 { char *token = string_copy(yytext); add_to_pif(get_entry(0, token, -1)); printf("%s - operator\n", yytext); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 156 "scanner.lxi"
+#line 133 "scanner.lxi"
 { char *token = string_copy(yytext); add_to_pif(get_entry(0, token, -1)); printf("%s - separator\n", yytext); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 158 "scanner.lxi"
+#line 135 "scanner.lxi"
 {}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 160 "scanner.lxi"
-{++lines;}
+#line 137 "scanner.lxi"
+{++read_lines;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 162 "scanner.lxi"
-{printf("Error at token %s at line %d\n", yytext, lines); exit(1);}
+#line 139 "scanner.lxi"
+{printf("Error at token %s at line %d\n", yytext, read_lines); exit(1);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 164 "scanner.lxi"
+#line 141 "scanner.lxi"
 ECHO;
 	YY_BREAK
-#line 1000 "lex.yy.c"
+#line 977 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2002,7 +1979,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 164 "scanner.lxi"
+#line 141 "scanner.lxi"
 
 
 int main(int argc, char **argv ) 
@@ -2014,16 +1991,16 @@ int main(int argc, char **argv )
    	init_symbol_tables();
     yylex();
     printf("INT SYMBOL TABLE\n\n");
-    for (int i = 0; i < pointer_int; ++i)
-    	printf("%d\n", int_symbol_table[i]);
+    for (int i = 0; i < int_symtable_pointer; ++i)
+    	printf("%d\n", int_symtable[i]);
     printf("\n");
     printf("STRING SYMBOL TABLE\n\n");
-    for (int i = 0; i < pointer_string; ++i)
-    	printf("%s\n", string_symbol_table[i]);
+    for (int i = 0; i < string_symtable_pointer; ++i)
+    	printf("%s\n", string_symtable[i]);
     printf("\n");
     printf("IDENTIFIER SYMBOL TABLE\n\n");
-    for (int i = 0; i < pointer_identifier; ++i)
-    	printf("%s\n", identifier_symbol_table[i]);
+    for (int i = 0; i < identifier_sybtable_pointer; ++i)
+    	printf("%s\n", identifier_symtable[i]);
     printf("PIF\n\n");
     for (int i = 0; i < pointer_pif; ++i)
     	printf("%d %s %d\n", pif[i].code, pif[i].token, pif[i].position);

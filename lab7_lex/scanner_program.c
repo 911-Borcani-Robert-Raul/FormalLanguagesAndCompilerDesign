@@ -1,4 +1,3 @@
-%{
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -102,64 +101,4 @@ char* string_copy(char *string) {
     for (int i = 0; i <= size; ++i)
         new_string[i] = string[i];
     return new_string;
-}
-%}
-
-%option noyywrap
-%option caseless
-
-DIGIT [0-9]
-NON_ZERO_DIGIT [1-9]
-INT_CONSTANT [+-]?{NON_ZERO_DIGIT}{DIGIT}*|0
-LETTER [a-zA-Z_]
-STRING_CONSTANT \"({LETTER}|{DIGIT})*\"
-IDENTIFIER {LETTER}({LETTER}|{DIGIT})*
-BAD_IDENTIFIER ({DIGIT})+({LETTER})+({LETTER}|{DIGIT})*
-
-%%
-
-"sqrt"|"char"|"integer"|"if"|"then"|"el"|"while"|"repeat"|"var"|"end"|"mod"|"space"|"read"|"write"|"struct"|"array"|"of" { char *token = string_copy(yytext); add_to_pif(get_entry(0, token, -1)); printf("%s - reserved word\n", yytext);}
-
-{IDENTIFIER} {char *id = string_copy(yytext); add_to_pif(get_entry(1, "__id_identifier", add_identifier_and_get_identifier_index(id))); printf("%s - identifier\n", yytext);}
-
-{BAD_IDENTIFIER} {printf("Error at token %s at line %d\n", yytext, read_lines); exit(1);}
-
-{INT_CONSTANT} {char *int_const = string_copy(yytext); add_to_pif(get_entry(2, "__id_constant", add_int_and_get_int_index(int_const))); printf("%s - int constant\n", yytext);}
-
-{STRING_CONSTANT} {char *str_const = string_copy(yytext); add_to_pif(get_entry(3, "__id_constant", add_string_and_get_string_index(str_const))); printf("%s - str constant\n", yytext);}
-
-"=="|"<="|">="|"*"|"+"|"-"|"/"|"%"|"="|"<"|">" { char *token = string_copy(yytext); add_to_pif(get_entry(0, token, -1)); printf("%s - operator\n", yytext); }
-
-"#"|":"|";"|"["|"]"|"$"|"["|"]"|"{"|"}"|"("|")"|"!"|"|" { char *token = string_copy(yytext); add_to_pif(get_entry(0, token, -1)); printf("%s - separator\n", yytext); }
-
-[ \t]+ {}
-
-[\n]+ {++read_lines;}
-
-. {printf("Error at token %s at line %d\n", yytext, read_lines); exit(1);}
-
-%%
-
-int main(int argc, char **argv ) 
-{ 
-    if ( argc > 1 ) 
-    	yyin = fopen(argv[1], "r"); 
-    else 
-    	yyin = stdin;
-   	init_symbol_tables();
-    yylex();
-    printf("INT SYMBOL TABLE\n\n");
-    for (int i = 0; i < int_symtable_pointer; ++i)
-    	printf("%d\n", int_symtable[i]);
-    printf("\n");
-    printf("STRING SYMBOL TABLE\n\n");
-    for (int i = 0; i < string_symtable_pointer; ++i)
-    	printf("%s\n", string_symtable[i]);
-    printf("\n");
-    printf("IDENTIFIER SYMBOL TABLE\n\n");
-    for (int i = 0; i < identifier_sybtable_pointer; ++i)
-    	printf("%s\n", identifier_symtable[i]);
-    printf("PIF\n\n");
-    for (int i = 0; i < pointer_pif; ++i)
-    	printf("%d %s %d\n", pif[i].code, pif[i].token, pif[i].position);
 }

@@ -1491,9 +1491,269 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 2:
+#line 64 "parser.y"
+    {printf("program -> 'var' decllist cmpdstmt 'end'\n");}
+    break;
+
+  case 3:
+#line 65 "parser.y"
+    {printf("decllist -> multiple_declarations\n");}
+    break;
+
+  case 4:
+#line 66 "parser.y"
+    {printf("mutiple_declarations -> declaration ';'\n");}
+    break;
+
+  case 5:
+#line 66 "parser.y"
+    {printf("multiple_declarations -> declaration ';' decllist\n");}
+    break;
+
+  case 6:
+#line 67 "parser.y"
+    {printf("declaration -> IDENTIFIER ',' type\n");}
+    break;
+
+  case 7:
+#line 67 "parser.y"
+    {printf("declaration -> STRUCT IDENTIFIER '(' decllist ')'\n");}
+    break;
+
+  case 8:
+#line 68 "parser.y"
+    {printf("type1 -> CHAR\n");}
+    break;
+
+  case 9:
+#line 68 "parser.y"
+    {printf("type1 -> INTEGER\n");}
+    break;
+
+  case 10:
+#line 68 "parser.y"
+    {printf("type1 -> arraydecl\n");}
+    break;
+
+  case 11:
+#line 69 "parser.y"
+    {printf("arraydecl -> ARRAY '[' INTCONSTANT ']' 'of' type1\n");}
+    break;
+
+  case 12:
+#line 70 "parser.y"
+    {printf("type -> type1\n");}
+    break;
+
+  case 13:
+#line 71 "parser.y"
+    {printf("cmpdstmt -> '#' stmtlist 'MOD'\n");}
+    break;
+
+  case 14:
+#line 72 "parser.y"
+    {printf("stmtlist -> stmt ';'\n");}
+    break;
+
+  case 15:
+#line 72 "parser.y"
+    {printf("stmtlist -> stmt ';' stmtlist\n");}
+    break;
+
+  case 16:
+#line 73 "parser.y"
+    {printf("stmt -> simplstmt\n");}
+    break;
+
+  case 17:
+#line 73 "parser.y"
+    {printf("stmt -> structstmt\n");}
+    break;
+
+  case 18:
+#line 74 "parser.y"
+    {printf("simplstmt -> assignstmt\n");}
+    break;
+
+  case 19:
+#line 74 "parser.y"
+    {printf("simplstmt -> iostmt\n");}
+    break;
+
+  case 20:
+#line 74 "parser.y"
+    {printf("simplstmt -> structaccessstmt\n");}
+    break;
+
+  case 21:
+#line 75 "parser.y"
+    {printf("assignstmt -> identif '=' expression\n");}
+    break;
+
+  case 22:
+#line 76 "parser.y"
+    {printf("expression -> expression '+' term\n");}
+    break;
+
+  case 23:
+#line 76 "parser.y"
+    {printf("expression -> expression '-' term\n");}
+    break;
+
+  case 24:
+#line 76 "parser.y"
+    {printf("expression -> term\n");}
+    break;
+
+  case 25:
+#line 76 "parser.y"
+    {printf("expression -> '-' term\n");}
+    break;
+
+  case 26:
+#line 77 "parser.y"
+    {printf("term -> term 'MOD' factor\n");}
+    break;
+
+  case 27:
+#line 77 "parser.y"
+    {printf("term -> term '*' factor\n");}
+    break;
+
+  case 28:
+#line 77 "parser.y"
+    {printf("term -> term '/' factor\n");}
+    break;
+
+  case 29:
+#line 77 "parser.y"
+    {printf("term -> factor\n");}
+    break;
+
+  case 30:
+#line 77 "parser.y"
+    {printf("decllist -> 'sqrt' '(' expression ')'\n");}
+    break;
+
+  case 31:
+#line 78 "parser.y"
+    {printf("factor -> '(' expression ')'\n");}
+    break;
+
+  case 32:
+#line 78 "parser.y"
+    {printf("factor -> identif\n");}
+    break;
+
+  case 33:
+#line 79 "parser.y"
+    {printf("iostmt -> 'read' '(' identif ')'\n");}
+    break;
+
+  case 34:
+#line 79 "parser.y"
+    {printf("iostmt -> 'write' '(' IDENTIFIER ')'\n");}
+    break;
+
+  case 35:
+#line 79 "parser.y"
+    {printf("iostmt -> 'write' '(' STRINGCONST ')'\n");}
+    break;
+
+  case 36:
+#line 80 "parser.y"
+    {printf("structaccessstmt -> identif '.' identif ';'\n");}
+    break;
+
+  case 37:
+#line 81 "parser.y"
+    {printf("identif -> INTCONSTANT\n");}
+    break;
+
+  case 38:
+#line 81 "parser.y"
+    {printf("identif -> IDENTIFIER\n");}
+    break;
+
+  case 39:
+#line 81 "parser.y"
+    {printf("identif -> IDENTIFIER '[' INTCONSTANT ']'\n");}
+    break;
+
+  case 40:
+#line 81 "parser.y"
+    {printf("identif -> IDENTIFIER '[' IDENTIFIER ']'\n");}
+    break;
+
+  case 41:
+#line 82 "parser.y"
+    {printf("structstmt -> cmpdstmt\n");}
+    break;
+
+  case 42:
+#line 82 "parser.y"
+    {printf("structstmt -> ifstmt\n");}
+    break;
+
+  case 43:
+#line 82 "parser.y"
+    {printf("structstmt -> whilestmt\n");}
+    break;
+
+  case 44:
+#line 83 "parser.y"
+    {printf("ifstmt -> 'if' condition 'then' stmtlist\n");}
+    break;
+
+  case 45:
+#line 83 "parser.y"
+    {printf("ifstmt -> 'if' condition 'then' stmtlist 'el' stmtlist\n");}
+    break;
+
+  case 46:
+#line 84 "parser.y"
+    {printf("whilestmt -> 'while' condition 'repeat' stmtlist\n");}
+    break;
+
+  case 47:
+#line 85 "parser.y"
+    {printf("condition -> expression relation expression\n");}
+    break;
+
+  case 48:
+#line 86 "parser.y"
+    {printf("relation -> '<'\n");}
+    break;
+
+  case 49:
+#line 86 "parser.y"
+    {printf("relation -> '<='\n");}
+    break;
+
+  case 50:
+#line 86 "parser.y"
+    {printf("relation -> '=='\n");}
+    break;
+
+  case 51:
+#line 86 "parser.y"
+    {printf("relation -> '<>'\n");}
+    break;
+
+  case 52:
+#line 86 "parser.y"
+    {printf("relation -> '>='\n");}
+    break;
+
+  case 53:
+#line 86 "parser.y"
+    {printf("relation -> '>'\n");}
+    break;
+
+
 /* Line 1267 of yacc.c.  */
-#line 1497 "y.tab.c"
+#line 1757 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

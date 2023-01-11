@@ -61,29 +61,29 @@ void yyerror(const char *s);
 %start program 
 
 %%
-program : VAR decllist cmpdstmt END
-decllist : multiple_declarations
-multiple_declarations : declaration SEMICOLON | declaration SEMICOLON decllist
-declaration : IDENTIFIER COLON type | STRUCT IDENTIFIER OPEN decllist CLOSE
-type1 : CHAR | INTEGER | arraydecl
-arraydecl : ARRAY OPENA INTCONSTANT CLOSEA OF type1
-type  : type1
-cmpdstmt : HASHTAG stmtlist MOD
-stmtlist : stmt SEMICOLON | stmt SEMICOLON stmtlist
-stmt : simplstmt | structstmt
-simplstmt : assignstmt | iostmt | structaccessstmt
-assignstmt : identif EQ expression
-expression : expression PLUS term | expression MINUS term | term | MINUS term
-term : term MOD factor | term TIMES factor | term DIV factor | factor | SQRT OPEN expression CLOSE
-factor : OPEN expression CLOSE | identif
-iostmt : READ OPEN identif CLOSE | WRITE OPEN IDENTIFIER CLOSE | WRITE OPEN STRINGCONSTANT CLOSE
-structaccessstmt : identif DOT identif SEMICOLON
-identif : INTCONSTANT | IDENTIFIER | IDENTIFIER OPENA INTCONSTANT CLOSEA | IDENTIFIER OPENA IDENTIFIER CLOSEA
-structstmt : cmpdstmt | ifstmt | whilestmt
-ifstmt : IF condition THEN stmtlist | IF condition THEN stmtlist EL stmtlist
-whilestmt : WHILE condition REPEAT stmtlist
-condition : expression RELATION expression
-RELATION : LESS | LESSEQ | EQQ | LESS BIGGER | BIGGEREQ | BIGGER
+program : VAR decllist cmpdstmt END {printf("program -> 'var' decllist cmpdstmt 'end'\n");}
+decllist : multiple_declarations {printf("decllist -> multiple_declarations\n");}
+multiple_declarations : declaration SEMICOLON {printf("mutiple_declarations -> declaration ';'\n");} | declaration SEMICOLON decllist {printf("multiple_declarations -> declaration ';' decllist\n");}
+declaration : IDENTIFIER COLON type {printf("declaration -> IDENTIFIER ',' type\n");} | STRUCT IDENTIFIER OPEN decllist CLOSE {printf("declaration -> STRUCT IDENTIFIER '(' decllist ')'\n");}
+type1 : CHAR {printf("type1 -> CHAR\n");} | INTEGER {printf("type1 -> INTEGER\n");} | arraydecl {printf("type1 -> arraydecl\n");}
+arraydecl : ARRAY OPENA INTCONSTANT CLOSEA OF type1 {printf("arraydecl -> ARRAY '[' INTCONSTANT ']' 'of' type1\n");}
+type  : type1 {printf("type -> type1\n");}
+cmpdstmt : HASHTAG stmtlist MOD {printf("cmpdstmt -> '#' stmtlist 'MOD'\n");}
+stmtlist : stmt SEMICOLON {printf("stmtlist -> stmt ';'\n");} | stmt SEMICOLON stmtlist {printf("stmtlist -> stmt ';' stmtlist\n");}
+stmt : simplstmt {printf("stmt -> simplstmt\n");} | structstmt {printf("stmt -> structstmt\n");}
+simplstmt : assignstmt {printf("simplstmt -> assignstmt\n");} | iostmt {printf("simplstmt -> iostmt\n");} | structaccessstmt {printf("simplstmt -> structaccessstmt\n");}
+assignstmt : identif EQ expression {printf("assignstmt -> identif '=' expression\n");}
+expression : expression PLUS term {printf("expression -> expression '+' term\n");} | expression MINUS term {printf("expression -> expression '-' term\n");} | term {printf("expression -> term\n");} | MINUS term {printf("expression -> '-' term\n");}
+term : term MOD factor {printf("term -> term 'MOD' factor\n");} | term TIMES factor {printf("term -> term '*' factor\n");} | term DIV factor {printf("term -> term '/' factor\n");} | factor {printf("term -> factor\n");} | SQRT OPEN expression CLOSE {printf("decllist -> 'sqrt' '(' expression ')'\n");}
+factor : OPEN expression CLOSE {printf("factor -> '(' expression ')'\n");} | identif {printf("factor -> identif\n");}
+iostmt : READ OPEN identif CLOSE {printf("iostmt -> 'read' '(' identif ')'\n");} | WRITE OPEN IDENTIFIER CLOSE {printf("iostmt -> 'write' '(' IDENTIFIER ')'\n");} | WRITE OPEN STRINGCONSTANT CLOSE {printf("iostmt -> 'write' '(' STRINGCONST ')'\n");}
+structaccessstmt : identif DOT identif SEMICOLON {printf("structaccessstmt -> identif '.' identif ';'\n");}
+identif : INTCONSTANT {printf("identif -> INTCONSTANT\n");} | IDENTIFIER {printf("identif -> IDENTIFIER\n");} | IDENTIFIER OPENA INTCONSTANT CLOSEA {printf("identif -> IDENTIFIER '[' INTCONSTANT ']'\n");} | IDENTIFIER OPENA IDENTIFIER CLOSEA {printf("identif -> IDENTIFIER '[' IDENTIFIER ']'\n");}
+structstmt : cmpdstmt {printf("structstmt -> cmpdstmt\n");} | ifstmt {printf("structstmt -> ifstmt\n");} | whilestmt {printf("structstmt -> whilestmt\n");}
+ifstmt : IF condition THEN stmtlist {printf("ifstmt -> 'if' condition 'then' stmtlist\n");} | IF condition THEN stmtlist EL stmtlist {printf("ifstmt -> 'if' condition 'then' stmtlist 'el' stmtlist\n");}
+whilestmt : WHILE condition REPEAT stmtlist {printf("whilestmt -> 'while' condition 'repeat' stmtlist\n");}
+condition : expression RELATION expression {printf("condition -> expression relation expression\n");}
+RELATION : LESS {printf("relation -> '<'\n");} | LESSEQ {printf("relation -> '<='\n");} | EQQ {printf("relation -> '=='\n");} | LESS BIGGER {printf("relation -> '<>'\n");} | BIGGEREQ {printf("relation -> '>='\n");} | BIGGER {printf("relation -> '>'\n");}
 %%
 void yyerror(const char *s)
 {	
